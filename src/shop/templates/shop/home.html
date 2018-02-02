@@ -1,3 +1,25 @@
+{% extends 'base.html' %}
+
+{% block jumbotron %}
+<main role="main">
+
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">SF Home Decor</h1>
+          <p class="lead text-muted">Only place for home decor...</p>
+          <p>
+            <!-- <a href="#" class="btn btn-primary my-2">Main call to action</a>
+            <a href="#" class="btn btn-secondary my-2">Secondary action</a> -->
+          </p>
+        </div>
+      </section>
+</main>
+{% endblock %}
+
+{% block content%}
+    {% include 'shop/album.html' %}
+{% endblock %}
+
 <h1> Hello Home page</h1>
 
 

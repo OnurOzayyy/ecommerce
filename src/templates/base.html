@@ -1,0 +1,38 @@
+{% load static %}
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../../../favicon.ico"> -->
+
+    <title>{% block head_title %}SF Home Decor{% endblock %}</title>
+
+   {% include 'head_css.html' %}
+  </head>
+
+  <body>
+
+    {% include 'navbar.html' %}
+
+
+    {% block jumbotron  %}
+
+    {% endblock %}
+
+    {% block content %}
+
+    {% endblock %}
+
+
+<!-- FOOTER STARTS -->
+
+<!-- END FOOTER  -->
+
+    {% include 'javaScript.html' %}
+  </body>
+</html>
