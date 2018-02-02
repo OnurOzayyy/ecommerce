@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.db.models.signals import post_save
-
+from django.utils.text import slugify
 
 
 class ProductQuerySet(models.query.QuerySet):
@@ -69,3 +69,18 @@ def product_post_saved_receiver(sender, instance, created, *args, **kwargs):
         new_var.save()
 
 post_save.connect(product_post_saved_receiver, sender=Product)
+
+def image_upload_to(instance, filename):
+    title       = instance.product.title
+    slug        = slugify(title)
+    basename, file_extension = filename.split('.')
+    new_filename = "{}{}.{}".format(basename, instance.id, file_extension)
+    return "products/{}/{}".format(slug,new_filename )
+
+
+class ProductImage(models.Model):
+    product     = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image       = models.ImageField(upload_to=image_upload_to)
+
+    def __str__(self):
+        return self.product.title

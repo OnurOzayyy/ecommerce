@@ -1,7 +1,11 @@
 from django.contrib import admin
 
-from products.models import Product, Variation
+from products.models import Product, Variation, ProductImage
 
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 0
 
 class VariationInline(admin.TabularInline):
     model = Variation
@@ -10,6 +14,7 @@ class VariationInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'price', 'id']
     inlines = [
+        ProductImageInline,
         VariationInline
     ]
     class Meta:
