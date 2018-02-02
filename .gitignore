@@ -1,0 +1,6 @@
+.DS_Store
+README.txt
+ENV_ECOMMERCE/
+.pyc*
+*.pyc
+src/db.sqlite3
