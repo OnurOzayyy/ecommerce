@@ -4,3 +4,4 @@ ENV_ECOMMERCE/
 .pyc*
 *.pyc
 src/db.sqlite3
+src/geckodriver.log
