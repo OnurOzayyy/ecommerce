@@ -4,3 +4,4 @@ src/db.sqlite3
 README.txt
 src/geckodriver.log
 *.pyc
+src/products/migrations/

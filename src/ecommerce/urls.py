@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('^$', home_page, name='home'),
     re_path(r'^accounts/', include('registration.backends.default.urls')),
+    re_path(r'^products/', include('products.urls')),
 ]
 
 if settings.DEBUG:
