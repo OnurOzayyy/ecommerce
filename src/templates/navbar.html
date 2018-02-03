@@ -23,8 +23,10 @@
                 <a class="dropdown-item" href="#">Something else here</a>
                 </div>
             </li> -->
-            <form class="form-inline my-8 my-md-0">
-                <input class="form-control" type="text" placeholder="Search">
+
+            <form class="form-inline my-8 my-md-0" method="GET" action="{% url 'products' %}">
+                <input class="form-control" name="q" type="text" placeholder="Search for item...">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
             {% if request.user.is_authenticated %}
             <li class="nav-item navbar-right">

@@ -5,3 +5,4 @@ README.txt
 src/geckodriver.log
 *.pyc
 src/products/migrations/
+static_in_env/
