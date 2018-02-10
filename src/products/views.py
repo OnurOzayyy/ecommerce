@@ -10,7 +10,37 @@ from django.utils import timezone
 from django.db.models import Q
 
 
-from .models import Product
+from .models import Product, Category
+
+
+
+class CategoryListView(ListView):
+    """
+    View for the List of the categories.
+    """
+    model = Category
+    queryset = Category.objects.all()
+    template_name = "products/product_list.html"
+
+
+class CategoryDetailView(DetailView):
+    """
+    View for the Category Detail.
+    """
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Returns products both in default category and
+        the category selected.
+        """
+        context = super(CategoryDetailView, self).get_context_data(*args, **kwargs)
+        obj = self.get_object()
+        product_set = obj.product_set.all()
+        default_products = obj.default_category.all()
+        products = (product_set | default_products).distinct()
+        context["products"] = products
+        return context
 
 
 class ProductListView(ListView):
@@ -27,20 +57,20 @@ class ProductListView(ListView):
         return context
 
     def get_queryset(self, *args, **kwargs):
-        qs = super(ProductListView, self).get_queryset(*args, **kwargs) #default query set
+        queryset = super(ProductListView, self).get_queryset(*args, **kwargs) #default query set
         query = self.request.GET.get('q')
         if query:  # if there is a query then you want to overwrite the default query set.
-            qs = self.model.objects.filter(
+            queryset = self.model.objects.filter(
                 Q(title__icontains=query) |
                 Q(description__icontains=query)
             )
             try:
-                qs2 = self.model.objects.filter(
+                queryset2 = self.model.objects.filter(
                     Q(price=query))
-                qs = (qs | qs2).distinct()
+                queryset = (queryset | queryset2).distinct()
             except:
                 pass
-        return qs
+        return queryset
 
 class ProductDetailView(DetailView):
     """
