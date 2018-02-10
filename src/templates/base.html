@@ -27,11 +27,17 @@
 
     {% endblock %}
 
-
 <!-- FOOTER STARTS -->
 
 <!-- END FOOTER  -->
 
     {% include 'javaScript.html' %}
+    <script >
+        $(document).ready(function() {
+
+            {% block jquery %}
+            {% endblock %}
+        })
+    </script>
   </body>
 </html>

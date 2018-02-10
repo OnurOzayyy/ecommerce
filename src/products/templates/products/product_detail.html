@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
+<script>
+{% block jquery %}
+    function setPrice(){
+        var price = $(".variation_select option:selected").attr("data-price")
+        var sale_price = $(".variation_select option:selected").attr("data-sale-price")
+        if (sale_price != "" && sale_price != "None" && sale_price != null ) {
+            $("#price").html("<h3>" + sale_price + " <small class='og-price'>" + price  + "</small></h3>");
+        } else {
+            $("#price").html(price);
+        }
+}
+    setPrice()
+    $(".variation_select").change(function(){
+        setPrice()
+    })
+{% endblock %}
+</script>
+
 {% block content %}
 <div class="container">
 <div class="row">
