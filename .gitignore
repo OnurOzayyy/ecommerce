@@ -6,3 +6,4 @@ src/geckodriver.log
 *.pyc
 src/products/migrations/
 static_in_env/
+src/static_in_project/

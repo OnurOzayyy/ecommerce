@@ -59,7 +59,9 @@
 <hr />
 <div class="container">
 <div class="row">
-    <h2>Related Products</h2>
+    <h3>Related Products</h3>
+</div>
+    {% include 'products/related_products.html' with related=related %}
 </div>
 </div>
 {% endblock %}

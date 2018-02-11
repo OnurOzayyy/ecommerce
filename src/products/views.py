@@ -51,15 +51,22 @@ class ProductListView(ListView):
     queryset = Product.objects.all()
 
     def get_context_data(self, *args, **kwargs):
+        """
+        Overwrites the context data by adding time and the related
+        searched items.
+        """
         context = super(ProductListView, self).get_context_data(*args, **kwargs)
         context['now'] = timezone.now()
         context["query"] = self.request.GET.get('q')
         return context
 
     def get_queryset(self, *args, **kwargs):
+        """
+        Overwrites the default query set if there is a query.
+        """
         queryset = super(ProductListView, self).get_queryset(*args, **kwargs) #default query set
         query = self.request.GET.get('q')
-        if query:  # if there is a query then you want to overwrite the default query set.
+        if query:
             queryset = self.model.objects.filter(
                 Q(title__icontains=query) |
                 Q(description__icontains=query)
@@ -77,3 +84,12 @@ class ProductDetailView(DetailView):
     Display product detail.
     """
     model = Product
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Overwrites the context data by adding the related products to the context.
+        """
+        context = super(ProductDetailView, self).get_context_data(*args, **kwargs)
+        instance = self.get_object()
+        context["related"] = Product.objects.get_related(instance)
+        return context

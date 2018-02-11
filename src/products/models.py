@@ -34,6 +34,20 @@ class ProductManager(models.Manager):
         """
         return self.get_queryset().active()
 
+    def get_related(self, instance):
+        """
+        Method to return related products.
+        Retrieves the instance as a parameter and filters the products
+        that has the same category and default category.
+        Excludes the instance itself, as well as the duplicates.
+        Returns the filtered products.
+        """
+        products_one = self.get_queryset().filter(categories__in=instance.categories.all())
+        products_two = self.get_queryset().filter(default=instance.default)
+        queryset = (products_one | products_two).exclude(id=instance.id).distinct()
+        return queryset
+
+
 
 class Product(models.Model):
     """
@@ -65,6 +79,16 @@ class Product(models.Model):
         Method to tell Django how to calculate the canonical URL for an object.
         """
         return reverse('product_detail', kwargs={'pk': self.pk})
+
+    def get_image_url(self):
+        """
+        Returns the image for a product. if a product does not have an image,
+        then it returns None.
+        """
+        img = self.productimage_set.first()
+        if img:
+            return img.image.url
+        return img
 
 
 class Variation(models.Model):
@@ -116,6 +140,9 @@ post_save.connect(product_post_saved_receiver, sender=Product)
 
 
 class Category(models.Model):
+    """
+    Models for the Category.
+    """
     title = models.CharField(max_length=120, unique=True)
     slug = models.SlugField(unique=True)
     description = models.TextField(null=True, blank=True)
