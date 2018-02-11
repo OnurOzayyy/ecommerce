@@ -2,3 +2,10 @@
     color:red;
     text-decoration:line-through;
 }
+
+
+.image {
+    height: 350px !important;
+    width: 300px !important;
+}
+
