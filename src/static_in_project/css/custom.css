@@ -9,3 +9,6 @@
     width: 300px !important;
 }
 
+.form-inline {
+    text-align: center;
+}
