@@ -20,12 +20,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+from carts.views import CartView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('^$', home_page, name='home'),
     re_path(r'^accounts/', include('registration.backends.default.urls')),
     re_path(r'^products/', include('products.urls')),
     re_path(r'^categories/', include('products.url_categories')),
+    re_path('^cart/$', CartView.as_view(), name='cart'),
 ]
 
 if settings.DEBUG:
