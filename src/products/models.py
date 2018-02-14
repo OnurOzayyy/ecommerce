@@ -123,6 +123,24 @@ class Variation(models.Model):
         """
         return self.product.get_absolute_url()
 
+    def add_to_cart(self):
+        """
+        Adds the Item to the Shopping cart.
+        """
+        return "{}?item={}&qty=1".format(reverse("cart"), self.id)
+
+    def remove_from_cart(self):
+        """
+        Removes the Item from the shopping cart by passing the delete as True.
+        """
+        return "{}?item={}&qty=1&delete=True".format(reverse("cart"), self.id)
+
+    def get_title(self):
+        """
+        Method to return the item title.
+        """
+        return "{}-{}".format(self.product.title, self.title)
+
 def product_post_saved_receiver(sender, instance, created, *args, **kwargs):
     """
     Create a default Variation for products that do not have a variation.

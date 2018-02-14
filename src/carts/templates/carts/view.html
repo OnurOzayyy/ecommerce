@@ -2,9 +2,17 @@
 
 {% block content %}
 
-{{ object }}
+<div class="container">
+<table class="table">
+{% for item in object.cartitem_set.all %}
+<tr>
+    <td>{{ item.item.get_title }}</td>
+    <td>{{ item.quantity }}</td>
+    <td class="text-right"><a href="{{ item.remove }}">X</a>></td>
+</tr>
 
-{{ object.items.all }}
+{% endfor %}
 
-
+</table>
+</div>
 {% endblock %}

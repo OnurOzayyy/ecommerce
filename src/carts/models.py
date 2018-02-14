@@ -14,6 +14,14 @@ class CartItem(models.Model):
     def __str__(self):
         return self.item.title
 
+    def remove(self):
+        """
+        Removes the item from the cart by calling the
+        remove_from_cart method of the Variation.
+        """
+        return self.item.remove_from_cart()
+
+
 class Cart(models.Model):
     """
     Cart Model.
