@@ -9,7 +9,7 @@ from carts.models import CartItem, Cart
 
 class CartView(View):
     model = Cart
-    template_name = "carts/view.html"
+    template_name = "carts/cart_view.html"
 
 
     def get_object(self, *args, **kwargs):
@@ -43,9 +43,10 @@ class CartView(View):
         cart = self.get_object()
         item_id = request.GET.get("item")
         delete_item = request.GET.get("delete", False)
+        print('---', delete_item)
+        flash_message = ""
         item_added = False
         if item_id:
-            print('inside if item id ',item_id)
             item_instance = get_object_or_404(Variation, id=item_id)
             qty = request.GET.get("qty", 1)
             try:
@@ -56,10 +57,15 @@ class CartView(View):
             cart_item, created = CartItem.objects.get_or_create(cart=cart, item=item_instance)
 
             if created:
+                flash_message = "Successfully added to the cart"
                 item_added = True
             if delete_item:
+                print("--inside delete item")
+                flash_message = "Item removed successfully."
                 cart_item.delete()
             else:
+                if not created:
+                    flash_message = "Quantity has been updated successfully."
                 cart_item.quantity = qty
                 cart_item.save()
             if not request.is_ajax():
@@ -78,8 +84,9 @@ class CartView(View):
                     "deleted": delete_item,
                     "item_added": item_added,
                     "subtotal": subtotal,
-                    "line_total": total
-                    }
+                    "line_total": total,
+                    "flash_message" : flash_message
+            }
             print(request.GET.get("item"))
             return JsonResponse(data)
 

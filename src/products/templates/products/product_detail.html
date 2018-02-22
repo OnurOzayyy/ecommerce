@@ -26,7 +26,7 @@
         url: "{% url 'cart' %}",
         data: formData,
         success: function(data) {
-            // showFlashMessage(data.flash_message);
+            showFlashMessage(data.flash_message)
             // updateCartItemCount();
         },
         error: function(response, error) {
@@ -41,8 +41,9 @@
 </script>
 
 {% block content %}
+
 <div class="container">
-<div class="row">
+<div class="row main-content">
     <div class="col-sm-8">
         <h2> {{ object.title }}</h2>
         {% if object.productimage_set.count > 0 %}
@@ -80,6 +81,7 @@
             <input id='submit-btn' type='submit' value='Add to Cart' class='btn btn-default' />
         </form>
     </div>
+</div>
 </div>
 </div>
 <hr />

@@ -13,7 +13,6 @@
 
 $(".item-qty").change(function(){
     var item = $(this).prev("input[type='hidden']").val();
-    console.log('--remove id ', item)
     var qty = $(this).val()
     var data = {
         item: item,
@@ -25,23 +24,24 @@ $(".item-qty").change(function(){
         url: "{% url 'cart' %}",
         data: data,
         success: function(data) {
-            console.log("success Data: ", data)
-            $("#jquery-message").text("Added " + data.item_added + " Deleted " + data.deleted)
-            console.log("Data deleted ",data.deleted)
+            console.log("deleted?: ", data.deleted)
+            console.log("Data deleted ", data.deleted)
             if (data.deleted){
+                console.log("Item Deleted")
                 $("#item-"+item).fadeOut();
                 $("#subtotal").text(data.subtotal);
-                console.log(data.subtotal)
+                showFlashMessage(data.flash_message)
             }
             else{
                 $("#item-line-total-"+item).text(data.line_total);
                 $("#subtotal").text(data.subtotal);
+                showFlashMessage(data.flash_message)
             }
-            },
+        },
         error: function(response, error) {
             console.log(response)
             console.log(error)
-            $("#add-form").submit()
+            //$("#add-form").submit()
         }
     })
 });
@@ -55,7 +55,6 @@ $(".item-qty").change(function(){
 <table class="table">
 {% for item in object.cartitem_set.all %}
 
-item is : {{ item.item.id }}<br />
 
 <tr id='item-{{ item.item.id }}'>
     <td>{{ item.item.get_title }}</td>
