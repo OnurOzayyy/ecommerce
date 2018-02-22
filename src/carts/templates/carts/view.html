@@ -1,18 +1,83 @@
 {% extends 'base.html' %}
 
-{% block content %}
 
-<div class="container">
+<script>
+
+{% block jquery %}
+
+// $("#remove").click(function(){
+//     var item = $("input[type='hidden']").val()
+//     console.log('--remove id ', item)
+// })
+
+
+$(".item-qty").change(function(){
+    var item = $(this).prev("input[type='hidden']").val();
+    console.log('--remove id ', item)
+    var qty = $(this).val()
+    var data = {
+        item: item,
+        qty: qty
+    }
+    console.log(data);
+    $.ajax({
+        type: "GET",
+        url: "{% url 'cart' %}",
+        data: data,
+        success: function(data) {
+            console.log("success Data: ", data)
+            $("#jquery-message").text("Added " + data.item_added + " Deleted " + data.deleted)
+            console.log("Data deleted ",data.deleted)
+            if (data.deleted){
+                $("#item-"+item).fadeOut();
+                $("#subtotal").text(data.subtotal);
+                console.log(data.subtotal)
+            }
+            else{
+                $("#item-line-total-"+item).text(data.line_total);
+                $("#subtotal").text(data.subtotal);
+            }
+            },
+        error: function(response, error) {
+            console.log(response)
+            console.log(error)
+            $("#add-form").submit()
+        }
+    })
+});
+
+    {% endblock %}
+</script>
+
+{% block content %}
+<div class='row main-content'>
+<div class="container mt-4">
 <table class="table">
 {% for item in object.cartitem_set.all %}
-<tr>
+
+item is : {{ item.item.id }}<br />
+
+<tr id='item-{{ item.item.id }}'>
     <td>{{ item.item.get_title }}</td>
-    <td>{{ item.quantity }}</td>
-    <td class="text-right"><a href="{{ item.remove }}">X</a>></td>
+    <td>
+        <form action="." method="GET" >
+            <p id="#jquery-message" class="lead"> </p>
+            <input type='hidden' name='item' value='{{ item.item.id }}' />
+            <input type='number' class='item-qty' name='qty' value='{{ item.quantity }}' />
+            <input type='submit' class='btn-update btn btn-link' value='Update item' style='display:none;'/>
+        </form>
+    </td>
+    <td id='item-line-total-{{ item.item.id }}'>{{ item.line_item_total }}</td>
+    <td id='remove' class='text-right' ><a href='{{ item.remove }}'>{{ item.remove }}</a></td>
 </tr>
 
 {% endfor %}
 
+<tr>
+    <td id="subtotal" colspan="4" class="text-right">Subtotal: {{ object.subtotal }}</td>
+</tr>
 </table>
+</div>
+
 </div>
 {% endblock %}
