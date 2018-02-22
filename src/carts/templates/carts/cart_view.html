@@ -37,6 +37,13 @@ $(".item-qty").change(function(){
                 $("#subtotal").text(data.subtotal);
                 showFlashMessage(data.flash_message)
             }
+            console.log(data.total_items)
+            if (data.total_items == 0 ) {
+                console.log("item total is zero")
+                $(".table").fadeOut()
+                var template = "<div class='col-sm-6 col-sm-offset-3 text-center'><h1>Your cart is empty</h1><p>Continue Shopping</p></div>";
+                $(".main-content").html(template);
+            }
         },
         error: function(response, error) {
             console.log(response)
