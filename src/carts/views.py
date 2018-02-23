@@ -7,6 +7,20 @@ from products.models import Variation
 from carts.models import CartItem, Cart
 
 
+class ItemCountView(View):
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            cart_id = self.request.session.get("cart_id")
+            if cart_id is None:
+                count = 0
+            else:
+                cart = Cart.objects.get(id=cart_id)
+                count = cart.items.count()
+            request.session["cart_item_count"] = count
+            return JsonResponse({"count": count})
+        else:
+            raise Http404
+
 class CartView(View):
     model = Cart
     template_name = "carts/cart_view.html"

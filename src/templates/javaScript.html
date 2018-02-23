@@ -7,3 +7,24 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <script src="{% static 'js/custom.js' %}"></script>
+
+    <script>
+        function updatedCartItemCount() {
+            var badge = $("#cart-count-badge")
+            $.ajax({
+                type: "GET",
+                url: "{% url 'item_count' %}",
+                success: function(data){
+                    badge.text(data.count)
+                    console.log()
+                },
+                error: function(response, error) {
+                    console.log(response)
+                    console.log(error)
+                }
+            })
+        }
+        $(document).ready(function(){
+            updatedCartItemCount()
+        })
+    </script>

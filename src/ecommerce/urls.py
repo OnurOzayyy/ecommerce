@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
-from carts.views import CartView
+from carts.views import CartView, ItemCountView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,7 @@ urlpatterns = [
     re_path(r'^products/', include('products.urls')),
     re_path(r'^categories/', include('products.url_categories')),
     re_path('^cart/$', CartView.as_view(), name='cart'),
+    re_path('^cart/count/$', ItemCountView.as_view(), name='item_count'),
 ]
 
 if settings.DEBUG:

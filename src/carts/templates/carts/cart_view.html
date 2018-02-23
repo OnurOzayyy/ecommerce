@@ -31,11 +31,13 @@ $(".item-qty").change(function(){
                 $("#item-"+item).fadeOut();
                 $("#subtotal").text(data.subtotal);
                 showFlashMessage(data.flash_message)
+                updatedCartItemCount()
             }
             else{
                 $("#item-line-total-"+item).text(data.line_total);
                 $("#subtotal").text(data.subtotal);
                 showFlashMessage(data.flash_message)
+                updatedCartItemCount()
             }
             console.log(data.total_items)
             if (data.total_items == 0 ) {
