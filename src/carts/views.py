@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.base import View
+from django.views.generic.detail import DetailView
 from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse
 
@@ -57,7 +59,6 @@ class CartView(View):
         cart = self.get_object()
         item_id = request.GET.get("item")
         delete_item = request.GET.get("delete", False)
-        print('---', delete_item)
         flash_message = ""
         item_added = False
         if item_id:
@@ -74,7 +75,6 @@ class CartView(View):
                 flash_message = "Successfully added to the cart"
                 item_added = True
             if delete_item:
-                print("--inside delete item")
                 flash_message = "Item removed successfully."
                 cart_item.delete()
             else:
@@ -116,13 +116,36 @@ class CartView(View):
                     "tax_total" : tax_total,
                     "cart_total": cart_total
             }
-            print(request.GET.get("item"))
             return JsonResponse(data)
 
         context = {
             "object": self.get_object()
         }
-        obj = self.get_object()
-        print('obj ',obj.items)
         template = self.template_name
         return render(request, template, context)
+
+class CheckoutView(DetailView):
+    model = Cart
+    template_name = "carts/checkout_view.html"
+
+    def get_object(self, *args, **kwargs):
+        """
+        Return cart object to display if none, then redirect to the cart.
+        """
+        cart_id = self.request.session.get("cart_id")
+        if cart_id == None:
+            return redirect("cart")
+        cart = Cart.objects.get(id=cart_id)
+        return cart
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CheckoutView, self).get_context_data(*args, **kwargs)
+        user_can_continue = False
+        if not self.request.user.is_authenticated:
+            context["login_form"] = AuthenticationForm()
+            context["next_url"] = self.request.build_absolute_uri()
+            print('???',context["next_url"])
+        if self.request.user.is_authenticated:
+            user_can_continue = True
+        context["user_can_continue"] = user_can_continue
+        return context
