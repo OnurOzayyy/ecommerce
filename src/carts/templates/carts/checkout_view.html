@@ -6,18 +6,21 @@
 
 {% block content %}
 
-
 {% if not user_can_continue %}
 <div class="row">
 <div class="col-sm-6 text-center">
     <p class="lead">Continue as Guest</p>
+    <form method="POST" accept="">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" class="btn btn-primary" value="Continue as Guest">
+    </form>
 </div>
 <div class="col-sm-6">
     <p class="lead">Login to Continue</p>
 <form method="POST" action="{% url 'auth_login' %}">
     {% csrf_token %}
     {{ login_form|crispy }}
-    {{ next_url }}
     <input type="hidden" name='next' value="{{ next_url }}" />
     <input type="submit" class="btn btn-primary" value="Login">
 
