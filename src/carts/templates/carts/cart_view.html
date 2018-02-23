@@ -61,6 +61,17 @@ $(".item-qty").change(function(){
 {% block content %}
 <div class='row main-content'>
 <div class="container mt-4">
+
+{% if object.cartitem_set.count < 1 %}
+
+{% include "carts/empty_cart.html" %}
+{% else %}
+
+<div class='col-sm-8 col-sm-offset-2'>
+
+<h1>Your cart</h1>
+
+
 <table class="table">
 {% for item in object.cartitem_set.all %}
 
@@ -94,6 +105,6 @@ $(".item-qty").change(function(){
 
 </table>
 </div>
-
+{% endif %}
 </div>
 {% endblock %}
