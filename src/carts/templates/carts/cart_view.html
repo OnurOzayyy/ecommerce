@@ -24,24 +24,25 @@ $(".item-qty").change(function(){
         url: "{% url 'cart' %}",
         data: data,
         success: function(data) {
-            console.log("deleted?: ", data.deleted)
-            console.log("Data deleted ", data.deleted)
             if (data.deleted){
                 console.log("Item Deleted")
                 $("#item-"+item).fadeOut();
                 $("#subtotal").text(data.subtotal);
+                $("#taxtotal").text(data.tax_total)
+                $("#carttotal").text(data.cart_total)
                 showFlashMessage(data.flash_message)
                 updatedCartItemCount()
             }
             else{
                 $("#item-line-total-"+item).text(data.line_total);
                 $("#subtotal").text(data.subtotal);
+                $("#taxtotal").text(data.tax_total)
+                $("#carttotal").text(data.cart_total)
                 showFlashMessage(data.flash_message)
                 updatedCartItemCount()
             }
             console.log(data.total_items)
             if (data.total_items == 0 ) {
-                console.log("item total is zero")
                 $(".table").fadeOut()
                 var template = "<div class='col-sm-6 col-sm-offset-3 text-center'><h1>Your cart is empty</h1><p>Continue Shopping</p></div>";
                 $(".main-content").html(template);
@@ -54,7 +55,6 @@ $(".item-qty").change(function(){
         }
     })
 });
-
     {% endblock %}
 </script>
 
@@ -84,6 +84,14 @@ $(".item-qty").change(function(){
 <tr>
     <td id="subtotal" colspan="4" class="text-right">Subtotal: {{ object.subtotal }}</td>
 </tr>
+<tr>
+    <td colspan='4' class='text-right'>Tax (Estimated): <span id='taxtotal'>{{ object.tax_total }}</span></td>
+</tr>
+
+<tr>
+    <td colspan='4' class='text-right'>Total: <span id='carttotal'>{{ object.total }}</span></td>
+</tr>
+
 </table>
 </div>
 

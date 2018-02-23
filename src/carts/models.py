@@ -30,10 +30,11 @@ def cart_item_pre_save_receiver(sender, instance, *args, **kwargs):
     """
     Sets the price for item before it is saved to the database.
     """
-    price = instance.item.get_price()
-    qty = instance.quantity
-    line_item_total =  Decimal(price) * Decimal(qty)
-    instance.line_item_total = line_item_total
+    qty = int(instance.quantity)
+    if qty >= 1:
+        price = instance.item.get_price()
+        line_item_total = Decimal(qty) * Decimal(price)
+        instance.line_item_total = line_item_total
 
 pre_save.connect(cart_item_pre_save_receiver, sender=CartItem)
 
@@ -52,7 +53,8 @@ class Cart(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     subtotal = models.DecimalField(max_digits=6, decimal_places=2, default=25.00)
-
+    tax_total = models.DecimalField(max_digits=6, decimal_places=2, default=25.00)
+    total = models.DecimalField(max_digits=6, decimal_places=2, default=25.00)
 
     def __str__(self):
         return str(self.id)
@@ -61,7 +63,6 @@ class Cart(models.Model):
         """
         Calculate the cart subtotal by adding the each item's price.
         """
-        print('updating subtotal...')
         subtotal = 0
         items = self.cartitem_set.all()
         print(items)
@@ -69,5 +70,13 @@ class Cart(models.Model):
             subtotal += item.line_item_total
         self.subtotal = subtotal
         self.save()
-        print("subtotal :", subtotal)
+
+def do_tax_and_total_receiver(sender, instance, *args, **kwargs):
+    subtotal = Decimal(instance.subtotal)
+    tax_total = round(subtotal * Decimal(0.085), 2)
+    total = round(subtotal + Decimal(tax_total), 2)
+    instance.tax_total = tax_total
+    instance.total = total
+
+pre_save.connect(do_tax_and_total_receiver, sender=Cart)
 

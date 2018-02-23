@@ -95,6 +95,14 @@ class CartView(View):
             except:
                 subtotal = None
             try:
+                cart_total = cart_item.cart.total
+            except:
+                cart_total = None
+            try:
+                tax_total = cart_item.cart.tax_total
+            except:
+                tax_total = None
+            try:
                 total_items = cart_item.cart.items.count()
             except:
                 total_items = 0
@@ -104,7 +112,9 @@ class CartView(View):
                     "subtotal": subtotal,
                     "line_total": total,
                     "flash_message" : flash_message,
-                    "total_items": total_items
+                    "total_items": total_items,
+                    "tax_total" : tax_total,
+                    "cart_total": cart_total
             }
             print(request.GET.get("item"))
             return JsonResponse(data)
@@ -112,5 +122,7 @@ class CartView(View):
         context = {
             "object": self.get_object()
         }
+        obj = self.get_object()
+        print('obj ',obj.items)
         template = self.template_name
         return render(request, template, context)
